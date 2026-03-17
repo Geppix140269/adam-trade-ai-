@@ -2,12 +2,12 @@
 // CONFIGURATION
 // ============================================
 
-// Backend API URL - Change this after deploying to Railway
-// Local: http://localhost:3000
-// Railway: https://your-app.up.railway.app
-const BACKEND_API_URL = window.location.hostname === 'localhost'
+// Backend API URL - Configured for Railway deployment
+// Local development: http://localhost:3000
+// Production: https://adam-trade-ai-backend-production.up.railway.app
+const BACKEND_API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:3000'
-    : 'https://adam-trade-ai-backend-production.up.railway.app'; // Replace with your Railway URL
+    : 'https://adam-trade-ai-backend-production.up.railway.app';
 
 const MODEL_NAME = 'phi3:mini';
 
