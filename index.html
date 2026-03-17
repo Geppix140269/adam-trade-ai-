@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADAMftd AI-Powered Global Trade Course</title>
+    <meta property="og:title" content="ADAMftd AI-Powered Global Trade Course">
+    <meta property="og:description" content="Master global trade with AI-powered tutoring, personalized study plans, and smart question generation.">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Intro Screen -->
+    <div id="intro" class="screen active">
+        <div class="grid-bg"></div>
+        <div class="glow-orb"></div>
+        <div class="intro-content">
+            <div class="intro-logo">
+                <span class="logo-adam">ADAM</span>
+                <span class="logo-ftd">ftd</span>
+            </div>
+            <div class="logo-bar"></div>
+            <div class="intro-sub">AI-Powered Global Trade Course</div>
+            <h1 class="intro-headline">Master Global Trade with <span>AI Intelligence</span></h1>
+            <p class="intro-body">
+                Experience personalized learning with AI tutoring, smart question generation,
+                and adaptive study plans powered by local AI.
+            </p>
+            <div class="course-stats">
+                <div class="stat">
+                    <div class="stat-val">10</div>
+                    <div class="stat-lbl">Modules</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-val">100</div>
+                    <div class="stat-lbl">Questions</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-val">AI</div>
+                    <div class="stat-lbl">Powered</div>
+                </div>
+            </div>
+
+            <!-- Ollama Connection Status -->
+            <div id="ollama-status" class="ollama-status">
+                <div class="status-indicator"></div>
+                <span class="status-text">Checking AI connection...</span>
+            </div>
+
+            <button class="btn-primary" onclick="startCourse()">Begin Your Journey</button>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app" class="screen">
+        <div class="app-header">
+            <div class="app-logo">
+                <span class="a">ADAM</span><span class="f">ftd</span>
+            </div>
+            <div class="hud">
+                <div class="hud-item">
+                    <div class="val" id="user-score">0</div>
+                    <div class="lbl">Score</div>
+                </div>
+                <div class="hud-item">
+                    <div class="val" id="user-progress">0%</div>
+                    <div class="lbl">Progress</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="app-body">
+            <!-- Sidebar Navigation -->
+            <nav class="sidebar">
+                <button class="nav-btn active" data-view="dashboard" onclick="switchView('dashboard')">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label">Dashboard</span>
+                </button>
+                <button class="nav-btn" data-view="modules" onclick="switchView('modules')">
+                    <span class="nav-icon">📚</span>
+                    <span class="nav-label">Modules</span>
+                </button>
+                <button class="nav-btn" data-view="ai-tutor" onclick="switchView('ai-tutor')">
+                    <span class="nav-icon">🤖</span>
+                    <span class="nav-label">AI Tutor</span>
+                </button>
+                <button class="nav-btn" data-view="practice" onclick="switchView('practice')">
+                    <span class="nav-icon">✏️</span>
+                    <span class="nav-label">Practice</span>
+                </button>
+                <button class="nav-btn" data-view="study-plan" onclick="switchView('study-plan')">
+                    <span class="nav-icon">📋</span>
+                    <span class="nav-label">Study Plan</span>
+                </button>
+            </nav>
+
+            <!-- Main Content Area -->
+            <main class="main-content">
+                <!-- Dashboard View -->
+                <div id="dashboard-view" class="view active">
+                    <h2 class="view-title">Welcome to Your Learning Dashboard</h2>
+                    <p class="view-subtitle">Track your progress and get AI-powered insights</p>
+
+                    <div class="dashboard-grid">
+                        <div class="dash-card">
+                            <div class="dash-icon">📈</div>
+                            <h3>Your Progress</h3>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="dash-progress-fill" style="width: 0%"></div>
+                            </div>
+                            <p id="dash-progress-text">0 of 10 modules completed</p>
+                        </div>
+
+                        <div class="dash-card">
+                            <div class="dash-icon">⭐</div>
+                            <h3>Total Score</h3>
+                            <div class="dash-score" id="dash-score">0</div>
+                            <p>points earned</p>
+                        </div>
+
+                        <div class="dash-card ai-card">
+                            <div class="dash-icon">🎯</div>
+                            <h3>AI Recommendation</h3>
+                            <p id="ai-recommendation">Loading personalized insights...</p>
+                            <button class="btn-secondary" onclick="generateRecommendation()">Refresh</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modules View -->
+                <div id="modules-view" class="view">
+                    <h2 class="view-title">Course Modules</h2>
+                    <p class="view-subtitle">10 comprehensive modules covering global trade</p>
+                    <div id="modules-container" class="modules-grid"></div>
+                </div>
+
+                <!-- AI Tutor View -->
+                <div id="ai-tutor-view" class="view">
+                    <h2 class="view-title">AI Tutor Chat</h2>
+                    <p class="view-subtitle">Ask anything about global trade and get instant AI-powered answers</p>
+
+                    <div class="chat-container">
+                        <div id="chat-messages" class="chat-messages">
+                            <div class="chat-message ai-message">
+                                <div class="message-avatar">🤖</div>
+                                <div class="message-content">
+                                    <p>Hello! I'm your AI tutor for global trade. I can help you understand complex topics, clarify concepts, and answer any questions you have about international trade, logistics, regulations, and more.</p>
+                                    <p>What would you like to learn about today?</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chat-input-container">
+                            <input
+                                type="text"
+                                id="chat-input"
+                                class="chat-input"
+                                placeholder="Ask a question about global trade..."
+                                onkeypress="handleChatEnter(event)"
+                            >
+                            <button class="btn-send" onclick="sendChatMessage()">Send</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Practice View -->
+                <div id="practice-view" class="view">
+                    <h2 class="view-title">AI-Generated Practice Questions</h2>
+                    <p class="view-subtitle">Get custom questions tailored to your learning needs</p>
+
+                    <div class="practice-controls">
+                        <div class="form-group">
+                            <label>Topic</label>
+                            <input type="text" id="practice-topic" placeholder="e.g., Incoterms, customs procedures">
+                        </div>
+                        <div class="form-group">
+                            <label>Difficulty</label>
+                            <select id="practice-difficulty">
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate" selected>Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Questions</label>
+                            <select id="practice-count">
+                                <option value="1">1 Question</option>
+                                <option value="3" selected>3 Questions</option>
+                                <option value="5">5 Questions</option>
+                            </select>
+                        </div>
+                        <button class="btn-primary" onclick="generatePracticeQuestions()">Generate Questions</button>
+                    </div>
+
+                    <div id="practice-questions" class="practice-questions"></div>
+                </div>
+
+                <!-- Study Plan View -->
+                <div id="study-plan-view" class="view">
+                    <h2 class="view-title">Personalized Study Plan</h2>
+                    <p class="view-subtitle">AI-generated learning path based on your progress</p>
+
+                    <button class="btn-primary" onclick="generateStudyPlan()">Generate My Study Plan</button>
+
+                    <div id="study-plan-content" class="study-plan-content"></div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loader"></div>
+        <p>AI is thinking...</p>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
