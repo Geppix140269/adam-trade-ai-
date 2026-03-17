@@ -20,7 +20,7 @@ This application uses a **client-server architecture**:
 
 ## Live Demo
 
-🌐 **Frontend**: [Your Netlify URL]
+🌐 **Frontend**: https://adamftd-trade-academy.netlify.app
 🔧 **Backend API**: https://adam-trade-ai-backend-production.up.railway.app
 
 ## Configuration
