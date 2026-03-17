@@ -9,7 +9,7 @@ const BACKEND_API_URL = window.location.hostname === 'localhost'
     ? 'http://localhost:3000'
     : 'https://adam-trade-ai-backend-production.up.railway.app'; // Replace with your Railway URL
 
-const MODEL_NAME = 'mistral';
+const MODEL_NAME = 'phi3:mini';
 
 // ============================================
 // STATE MANAGEMENT
