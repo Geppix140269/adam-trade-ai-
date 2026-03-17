@@ -2,7 +2,13 @@
 // CONFIGURATION
 // ============================================
 
-const OLLAMA_API_URL = 'http://localhost:11434/api';
+// Backend API URL - Change this after deploying to Railway
+// Local: http://localhost:3000
+// Railway: https://your-app.up.railway.app
+const BACKEND_API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:3000'
+    : 'https://adam-trade-ai-backend-production.up.railway.app'; // Replace with your Railway URL
+
 const MODEL_NAME = 'mistral';
 
 // ============================================
@@ -37,16 +43,16 @@ const appState = {
 // ============================================
 
 /**
- * Check if Ollama is running and accessible
+ * Check if backend API and Ollama are running and accessible
  */
 async function checkOllamaConnection() {
     try {
-        const response = await fetch(`${OLLAMA_API_URL}/tags`);
+        const response = await fetch(`${BACKEND_API_URL}/api/health`);
         if (response.ok) {
             const data = await response.json();
-            const hasModel = data.models.some(m => m.name.includes(MODEL_NAME));
-            updateOllamaStatus(true, hasModel);
-            return true;
+            const hasModel = data.models && data.models.some(m => m.name.includes(MODEL_NAME));
+            updateOllamaStatus(data.status === 'connected', hasModel);
+            return data.status === 'connected';
         }
     } catch (error) {
         updateOllamaStatus(false, false);
@@ -55,7 +61,7 @@ async function checkOllamaConnection() {
 }
 
 /**
- * Update UI to show Ollama connection status
+ * Update UI to show AI service connection status
  */
 function updateOllamaStatus(connected, hasModel) {
     const statusEl = document.getElementById('ollama-status');
@@ -66,38 +72,39 @@ function updateOllamaStatus(connected, hasModel) {
         statusEl.querySelector('.status-text').textContent = `AI Ready (${MODEL_NAME})`;
     } else if (connected && !hasModel) {
         statusEl.className = 'ollama-status disconnected';
-        statusEl.querySelector('.status-text').textContent = `Please install ${MODEL_NAME} model`;
+        statusEl.querySelector('.status-text').textContent = `AI model not available`;
     } else {
         statusEl.className = 'ollama-status disconnected';
-        statusEl.querySelector('.status-text').textContent = 'AI Offline - Start Ollama';
+        statusEl.querySelector('.status-text').textContent = 'AI Service Connecting...';
     }
 }
 
 /**
- * Generate text using Ollama
+ * Generate text using backend API (which connects to Ollama)
  */
 async function generateText(prompt, systemPrompt = '') {
     if (!appState.ollamaConnected) {
-        throw new Error('Ollama is not connected. Please start Ollama and refresh.');
+        throw new Error('AI service is not available. Please check your connection.');
     }
 
     showLoading();
 
     try {
-        const response = await fetch(`${OLLAMA_API_URL}/generate`, {
+        const response = await fetch(`${BACKEND_API_URL}/api/generate`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 model: MODEL_NAME,
-                prompt: systemPrompt ? `${systemPrompt}\n\n${prompt}` : prompt,
-                stream: false
+                prompt: prompt,
+                system: systemPrompt || 'You are a helpful AI tutor specializing in global trade, international commerce, and business.'
             })
         });
 
         if (!response.ok) {
-            throw new Error(`Ollama API error: ${response.status}`);
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || `API error: ${response.status}`);
         }
 
         const data = await response.json();

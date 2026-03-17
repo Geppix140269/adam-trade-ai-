@@ -1,6 +1,6 @@
 # ADAMftd AI-Powered Global Trade Course
 
-An interactive learning platform for mastering global trade, powered by local AI using Ollama.
+An interactive learning platform for mastering global trade, powered by AI through a hosted backend service.
 
 ## Features
 
@@ -11,40 +11,56 @@ An interactive learning platform for mastering global trade, powered by local AI
 - **10 Comprehensive Modules**: Cover all aspects of global trade from fundamentals to advanced topics
 - **Progress Tracking**: Monitor your learning journey with real-time score and progress updates
 
-## Prerequisites
+## Architecture
 
-1. **Ollama** installed on your machine
-   - Download from: https://ollama.com
-   - Installation guide: https://github.com/ollama/ollama
+This application uses a **client-server architecture**:
+- **Frontend**: Static HTML/CSS/JavaScript hosted on Netlify
+- **Backend**: Node.js API server with Ollama integration hosted on Railway
+- **AI Model**: Mistral 7B running via Ollama on the backend server
 
-2. **Mistral Model** (or any other model you prefer)
+## Live Demo
+
+🌐 **Frontend**: [Your Netlify URL]
+🔧 **Backend API**: https://adam-trade-ai-backend-production.up.railway.app
+
+## Configuration
+
+### Updating Backend URL
+
+If you deploy your own backend, update the `BACKEND_API_URL` in `app.js`:
+
+```javascript
+const BACKEND_API_URL = 'https://your-railway-app.up.railway.app';
+```
+
+### Local Development
+
+To run the app locally with a local backend:
+
+1. **Clone both repositories**
    ```bash
-   ollama pull mistral
+   git clone https://github.com/Geppix140269/adam-trade-ai-.git
+   git clone https://github.com/Geppix140269/-adam-trade-ai-backend.git
    ```
 
-## Local Setup
-
-1. **Clone or download this repository**
-
-2. **Ensure Ollama is running**
+2. **Start the backend** (see backend README for details)
    ```bash
-   ollama serve
+   cd adam-trade-ai-backend
+   npm install
+   npm start
    ```
 
-3. **Open the app**
-   - Simply open `index.html` in your web browser
+3. **Open the frontend**
+   - Open `index.html` in your browser
    - Or use a local server:
      ```bash
-     # Python 3
+     cd adam-trade-ai
      python -m http.server 8000
-
-     # Node.js
-     npx serve
      ```
 
 4. **Check AI connection**
-   - The app will automatically detect if Ollama is running
-   - Look for the green "AI Ready" indicator on the intro screen
+   - The app will automatically connect to the backend
+   - Look for the green "AI Ready" indicator
 
 ## How It Works
 
