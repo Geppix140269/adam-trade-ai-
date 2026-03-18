@@ -22,6 +22,7 @@ This application uses a **client-server architecture**:
 
 🌐 **Frontend**: https://adamftd-trade-academy.netlify.app
 🔧 **Backend API**: https://adam-trade-ai-backend-production.up.railway.app
+🤖 **AI Model**: OpenAI GPT-3.5-turbo
 
 ## Configuration
 
