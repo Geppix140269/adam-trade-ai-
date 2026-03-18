@@ -1,22 +1,35 @@
 :root {
-  --black: #06080A;
-  --surface: #0C0F12;
-  --card: #111518;
-  --border: #1C2228;
-  --border-lit: #2A3540;
-  --navy: #1A4A6B;
-  --teal: #1A8FA0;
-  --teal-dim: rgba(26,143,160,0.12);
-  --gold: #D4A340;
-  --gold-dim: rgba(212,163,64,0.12);
+  /* ADAM Brand Colors - More Vibrant */
+  --adam-navy: #1E5A8E;
+  --adam-navy-light: #2A7BC4;
+  --adam-teal: #1FB5C9;
+  --adam-teal-light: #3DD5EA;
+  --adam-gold: #F4B942;
+  --adam-gold-light: #FFD166;
+
+  /* Background & Surface */
+  --black: #0A0E14;
+  --surface: #141B24;
+  --card: #1A2332;
+  --border: #2A3847;
+  --border-lit: #3A4857;
+
+  /* Text Colors */
+  --white: #FFFFFF;
+  --text-primary: #E8F1F8;
+  --text-secondary: #B8C9D8;
+  --text-muted: #7A8A9A;
+  --muted: #7A8A9A;
+  --text: #B8C9D8;
+
+  /* Status Colors */
   --green: #2ECC71;
   --red: #E74C3C;
-  --white: #F0F5FA;
-  --text: #C8D8E8;
-  --muted: #5A7080;
-  --accent1: #3CC87A;
-  --accent2: #E8870C;
-  --accent3: #8B52AA;
+
+  /* Gradients */
+  --gradient-adam: linear-gradient(135deg, var(--adam-navy), var(--adam-navy-light));
+  --gradient-teal: linear-gradient(135deg, var(--adam-teal), var(--adam-teal-light));
+  --gradient-multi: linear-gradient(90deg, var(--adam-teal), var(--adam-gold), var(--adam-navy));
 }
 
 * {
@@ -99,56 +112,74 @@ body {
 
 .logo-adam {
   font-family: 'Syne', sans-serif;
-  font-size: 64px;
-  font-weight: 800;
-  color: var(--navy);
+  font-size: 72px;
+  font-weight: 900;
+  background: var(--gradient-adam);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   letter-spacing: -2px;
   line-height: 1;
+  text-shadow: 0 4px 12px rgba(30, 90, 142, 0.3);
 }
 
 .logo-ftd {
   font-family: 'Syne', sans-serif;
-  font-size: 64px;
-  font-weight: 400;
-  color: var(--teal);
+  font-size: 72px;
+  font-weight: 500;
+  background: var(--gradient-teal);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   letter-spacing: -2px;
   line-height: 1;
+  text-shadow: 0 4px 12px rgba(31, 181, 201, 0.3);
 }
 
 .logo-bar {
-  width: 240px;
-  height: 4px;
-  border-radius: 2px;
-  background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3), var(--teal));
-  margin: 10px 0 6px;
+  width: 260px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--gradient-multi);
+  margin: 12px 0 8px;
+  box-shadow: 0 4px 12px rgba(31, 181, 201, 0.3);
 }
 
 .intro-sub {
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 600;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--adam-gold);
   margin-bottom: 32px;
+  text-shadow: 0 2px 4px rgba(244, 185, 66, 0.2);
 }
 
 .intro-headline {
   font-family: 'Syne', sans-serif;
-  font-size: 34px;
-  font-weight: 800;
-  color: var(--white);
-  line-height: 1.2;
-  margin-bottom: 16px;
+  font-size: 42px;
+  font-weight: 900;
+  color: var(--text-primary);
+  line-height: 1.3;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  letter-spacing: -0.5px;
 }
 
 .intro-headline span {
-  color: var(--teal);
+  background: var(--gradient-teal);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 900;
 }
 
 .intro-body {
-  font-size: 15px;
-  color: var(--muted);
-  line-height: 1.9;
+  font-size: 17px;
+  color: var(--text-secondary);
+  line-height: 1.8;
   margin-bottom: 32px;
+  font-weight: 400;
 }
 
 .course-stats {
@@ -226,23 +257,25 @@ body {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--navy), var(--teal));
+  background: linear-gradient(135deg, var(--adam-navy), var(--adam-teal));
   color: white;
   border: none;
   padding: 18px 60px;
   font-family: 'Syne', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 3px;
+  letter-spacing: 2px;
   text-transform: uppercase;
   border-radius: 50px;
   cursor: pointer;
   transition: all 0.3s;
+  box-shadow: 0 8px 24px rgba(30, 90, 142, 0.3);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 16px 48px rgba(26,143,160,0.3);
+  box-shadow: 0 16px 48px rgba(31, 181, 201, 0.5);
+  background: linear-gradient(135deg, var(--adam-navy-light), var(--adam-teal-light));
 }
 
 .btn-primary:disabled {
@@ -386,10 +419,15 @@ body {
 
 .view-title {
   font-family: 'Syne', sans-serif;
-  font-size: 32px;
-  font-weight: 800;
-  color: var(--white);
-  margin-bottom: 8px;
+  font-size: 36px;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--text-primary), var(--adam-teal-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  letter-spacing: -0.5px;
 }
 
 .view-subtitle {
@@ -413,21 +451,25 @@ body {
 }
 
 .dash-card.ai-card {
-  background: linear-gradient(135deg, var(--card), rgba(26,143,160,0.05));
-  border-color: var(--teal);
+  background: linear-gradient(135deg, var(--card), rgba(31,181,201,0.08));
+  border-color: var(--adam-teal);
+  box-shadow: 0 4px 16px rgba(31, 181, 201, 0.15);
 }
 
 .dash-icon {
-  font-size: 40px;
+  font-size: 44px;
   margin-bottom: 16px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .dash-card h3 {
   font-family: 'Syne', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--white);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-primary);
   margin-bottom: 16px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  letter-spacing: -0.3px;
 }
 
 .dash-card p {
