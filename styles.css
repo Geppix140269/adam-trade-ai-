@@ -1,26 +1,26 @@
 :root {
-  /* ADAM Brand Colors - More Vibrant */
-  --adam-navy: #1E5A8E;
-  --adam-navy-light: #2A7BC4;
-  --adam-teal: #1FB5C9;
-  --adam-teal-light: #3DD5EA;
-  --adam-gold: #F4B942;
-  --adam-gold-light: #FFD166;
+  /* ADAM Brand Colors - HIGH CONTRAST */
+  --adam-navy: #0F4C81;
+  --adam-navy-bright: #1E90FF;
+  --adam-teal: #00CED1;
+  --adam-teal-bright: #00FFFF;
+  --adam-gold: #FFD700;
+  --adam-gold-bright: #FFEB3B;
 
-  /* Background & Surface */
-  --black: #0A0E14;
-  --surface: #141B24;
-  --card: #1A2332;
-  --border: #2A3847;
-  --border-lit: #3A4857;
+  /* Background & Surface - Darker for better contrast */
+  --black: #000000;
+  --surface: #0A0A0A;
+  --card: #111111;
+  --border: #333333;
+  --border-lit: #444444;
 
-  /* Text Colors */
+  /* Text Colors - Much Brighter */
   --white: #FFFFFF;
-  --text-primary: #E8F1F8;
-  --text-secondary: #B8C9D8;
-  --text-muted: #7A8A9A;
-  --muted: #7A8A9A;
-  --text: #B8C9D8;
+  --text-primary: #FFFFFF;
+  --text-secondary: #E0E0E0;
+  --text-muted: #AAAAAA;
+  --muted: #AAAAAA;
+  --text: #E0E0E0;
 
   /* Status Colors */
   --green: #2ECC71;
@@ -112,28 +112,22 @@ body {
 
 .logo-adam {
   font-family: 'Syne', sans-serif;
-  font-size: 72px;
+  font-size: 96px;
   font-weight: 900;
-  background: var(--gradient-adam);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--adam-navy-bright);
   letter-spacing: -2px;
   line-height: 1;
-  text-shadow: 0 4px 12px rgba(30, 90, 142, 0.3);
+  text-shadow: 0 0 20px rgba(30, 144, 255, 0.6), 0 4px 8px rgba(0, 0, 0, 0.8);
 }
 
 .logo-ftd {
   font-family: 'Syne', sans-serif;
-  font-size: 72px;
-  font-weight: 500;
-  background: var(--gradient-teal);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: 96px;
+  font-weight: 600;
+  color: var(--adam-teal-bright);
   letter-spacing: -2px;
   line-height: 1;
-  text-shadow: 0 4px 12px rgba(31, 181, 201, 0.3);
+  text-shadow: 0 0 20px rgba(0, 255, 255, 0.6), 0 4px 8px rgba(0, 0, 0, 0.8);
 }
 
 .logo-bar {
@@ -146,40 +140,39 @@ body {
 }
 
 .intro-sub {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 3px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 4px;
   text-transform: uppercase;
-  color: var(--adam-gold);
+  color: var(--adam-gold-bright);
   margin-bottom: 32px;
-  text-shadow: 0 2px 4px rgba(244, 185, 66, 0.2);
+  text-shadow: 0 0 15px rgba(255, 235, 59, 0.5), 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .intro-headline {
   font-family: 'Syne', sans-serif;
-  font-size: 42px;
+  font-size: 54px;
   font-weight: 900;
-  color: var(--text-primary);
-  line-height: 1.3;
-  margin-bottom: 20px;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-  letter-spacing: -0.5px;
+  color: #FFFFFF;
+  line-height: 1.2;
+  margin-bottom: 24px;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.9);
+  letter-spacing: -1px;
 }
 
 .intro-headline span {
-  background: var(--gradient-teal);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--adam-teal-bright);
   font-weight: 900;
+  text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
 }
 
 .intro-body {
-  font-size: 17px;
-  color: var(--text-secondary);
-  line-height: 1.8;
+  font-size: 24px;
+  color: #FFFFFF;
+  line-height: 1.6;
   margin-bottom: 32px;
-  font-weight: 400;
+  font-weight: 500;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
 .course-stats {
@@ -419,15 +412,13 @@ body {
 
 .view-title {
   font-family: 'Syne', sans-serif;
-  font-size: 36px;
+  font-size: 48px;
   font-weight: 900;
-  background: linear-gradient(135deg, var(--text-primary), var(--adam-teal-light));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 12px;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  letter-spacing: -0.5px;
+  color: #FFFFFF;
+  margin-bottom: 16px;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+  letter-spacing: -1px;
+  line-height: 1.2;
 }
 
 .view-subtitle {
@@ -464,12 +455,12 @@ body {
 
 .dash-card h3 {
   font-family: 'Syne', sans-serif;
-  font-size: 20px;
+  font-size: 28px;
   font-weight: 800;
-  color: var(--text-primary);
+  color: #FFFFFF;
   margin-bottom: 16px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  letter-spacing: -0.3px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  letter-spacing: -0.5px;
 }
 
 .dash-card p {
@@ -547,10 +538,11 @@ body {
 
 .module-title {
   font-family: 'Syne', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--white);
+  font-size: 24px;
+  font-weight: 800;
+  color: #FFFFFF;
   margin-bottom: 8px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
 }
 
 .module-desc {
@@ -726,10 +718,11 @@ body {
 
 .question-text {
   font-family: 'Syne', sans-serif;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--white);
+  font-size: 24px;
+  font-weight: 700;
+  color: #FFFFFF;
   margin-bottom: 16px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
 }
 
 .question-options {
@@ -799,10 +792,11 @@ body {
 
 .study-plan-card h3 {
   font-family: 'Syne', sans-serif;
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--white);
+  font-size: 30px;
+  font-weight: 800;
+  color: #FFFFFF;
   margin-bottom: 24px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
 }
 
 .study-plan-week {
@@ -811,12 +805,13 @@ body {
 
 .week-title {
   font-family: 'Syne', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--teal);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--adam-teal-bright);
   margin-bottom: 12px;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--border);
+  text-shadow: 0 0 12px rgba(0, 255, 255, 0.4);
 }
 
 .study-plan-card ul {
