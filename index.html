@@ -204,6 +204,26 @@
 
                     <div id="study-plan-content" class="study-plan-content"></div>
                 </div>
+
+                <!-- Module Lesson View -->
+                <div id="module-lesson-view" class="view">
+                    <button class="btn-secondary" onclick="closeModule()" style="margin-bottom: 16px;">← Back to Modules</button>
+
+                    <div id="lesson-header">
+                        <h2 class="view-title" id="lesson-title"></h2>
+                        <p class="view-subtitle" id="lesson-subtitle"></p>
+                    </div>
+
+                    <div class="lesson-container">
+                        <div id="lesson-content" class="lesson-content"></div>
+
+                        <div id="lesson-quiz" class="lesson-quiz" style="display: none;">
+                            <h3 style="font-size: 20px; font-weight: 700; color: var(--white); margin-bottom: 16px;">Test Your Knowledge</h3>
+                            <div id="quiz-questions" class="practice-questions"></div>
+                            <button class="btn-primary" onclick="completeModule()" id="complete-btn" style="display: none; margin-top: 24px;">Complete Module</button>
+                        </div>
+                    </div>
+                </div>
             </main>
         </div>
     </div>

@@ -222,17 +222,243 @@ function updateDashboard() {
 
 function renderModules() {
     const container = document.getElementById('modules-container');
-    container.innerHTML = appState.modules.map(module => `
-        <div class="module-card" onclick="openModule(${module.id})">
-            <div class="module-num">Module ${module.id}</div>
-            <div class="module-title">${module.icon} ${module.title}</div>
-            <div class="module-desc">${module.desc}</div>
+    container.innerHTML = appState.modules.map(module => {
+        const isCompleted = appState.user.completedModules.includes(module.id);
+        const statusBadge = isCompleted ? '<span style="position: absolute; top: 14px; right: 14px; background: var(--wave-green); color: var(--brand-black); font-size: 9px; font-weight: 800; padding: 3px 9px; border-radius: 20px; letter-spacing: 1.2px;">✓ COMPLETE</span>' : '';
+
+        return `
+            <div class="module-card ${isCompleted ? 'completed' : ''}" onclick="openModule(${module.id})">
+                ${statusBadge}
+                <div class="module-num">Module ${module.id}</div>
+                <div class="module-title">${module.icon} ${module.title}</div>
+                <div class="module-desc">${module.desc}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+// ============================================
+// MODULE LESSON FEATURE
+// ============================================
+
+let currentModuleId = null;
+
+async function openModule(id) {
+    currentModuleId = id;
+    const module = appState.modules.find(m => m.id === id);
+
+    if (!module) return;
+
+    // Switch to module lesson view
+    document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
+    document.getElementById('module-lesson-view').classList.add('active');
+
+    // Update header
+    document.getElementById('lesson-title').textContent = `${module.icon} ${module.title}`;
+    document.getElementById('lesson-subtitle').textContent = module.desc;
+
+    // Show loading state
+    const contentEl = document.getElementById('lesson-content');
+    contentEl.innerHTML = '<div class="lesson-loading">🤖 AI is generating your personalized lesson...</div>';
+
+    // Hide quiz initially
+    document.getElementById('lesson-quiz').style.display = 'none';
+
+    try {
+        // Generate comprehensive lesson using AI
+        const prompt = `Create a comprehensive lesson about "${module.title}" for a global trade course.
+
+The lesson should include:
+
+1. **Introduction**: Brief overview of what this topic is and why it's important in global trade
+
+2. **Key Concepts**: 3-4 main concepts that students need to understand, with clear explanations
+
+3. **Real-World Applications**: 2-3 practical examples of how this is used in actual international trade
+
+4. **Best Practices**: Important tips and guidelines professionals should follow
+
+5. **Common Challenges**: 2-3 typical problems or mistakes and how to avoid them
+
+Format the response in clear sections with headers. Use bullet points for lists. Keep explanations clear and practical. Target intermediate learners who want to work in international trade.`;
+
+        const lessonContent = await generateText(prompt);
+
+        // Display the lesson
+        displayLesson(lessonContent);
+
+        // Generate quiz questions after a short delay
+        setTimeout(() => {
+            generateLessonQuiz(module);
+        }, 1000);
+
+    } catch (error) {
+        contentEl.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: var(--wave-red);">
+                <p>Failed to generate lesson. Please ensure AI service is running.</p>
+                <button class="btn-secondary" onclick="openModule(${id})" style="margin-top: 16px;">Try Again</button>
+            </div>
+        `;
+    }
+}
+
+function displayLesson(content) {
+    const contentEl = document.getElementById('lesson-content');
+
+    // Parse and format the lesson content
+    let formattedContent = content
+        // Convert markdown-style headers to HTML
+        .replace(/\*\*([^*]+)\*\*/g, '<h3>$1</h3>')
+        // Convert bold text
+        .replace(/\*([^*]+)\*/g, '<strong>$1</strong>')
+        // Convert line breaks to paragraphs
+        .split('\n\n')
+        .map(para => {
+            para = para.trim();
+            if (!para) return '';
+            if (para.startsWith('<h3>')) return para;
+            if (para.includes('•') || para.includes('-')) {
+                // Convert to list
+                const items = para.split('\n').filter(line => line.trim());
+                const listItems = items.map(item => {
+                    const cleaned = item.replace(/^[•\-]\s*/, '').trim();
+                    return cleaned ? `<li>${cleaned}</li>` : '';
+                }).filter(item => item).join('');
+                return listItems ? `<ul>${listItems}</ul>` : '';
+            }
+            return `<p>${para}</p>`;
+        })
+        .join('');
+
+    contentEl.innerHTML = formattedContent || '<p>' + content.replace(/\n/g, '</p><p>') + '</p>';
+}
+
+async function generateLessonQuiz(module) {
+    const quizEl = document.getElementById('lesson-quiz');
+    const questionsEl = document.getElementById('quiz-questions');
+
+    quizEl.style.display = 'block';
+    questionsEl.innerHTML = '<div class="lesson-loading">Generating quiz questions...</div>';
+
+    try {
+        const prompt = `Generate 3 multiple choice questions about "${module.title}" to test understanding of the lesson content.
+
+For each question, provide:
+1. The question text
+2. Four answer options (A, B, C, D)
+3. The correct answer letter
+4. A brief explanation of why the answer is correct
+
+Format each question exactly like this:
+QUESTION: [question text]
+A) [option A]
+B) [option B]
+C) [option C]
+D) [option D]
+CORRECT: [A/B/C/D]
+EXPLANATION: [explanation]
+
+---
+(repeat for each question, separated by ---)`;
+
+        const response = await generateText(prompt);
+        const questions = parseQuestions(response);
+
+        if (questions.length > 0) {
+            displayLessonQuiz(questions);
+        } else {
+            questionsEl.innerHTML = '<p style="color: var(--muted);">Could not generate quiz. You can still complete the module.</p>';
+            document.getElementById('complete-btn').style.display = 'inline-block';
+        }
+    } catch (error) {
+        questionsEl.innerHTML = '<p style="color: var(--muted);">Quiz generation failed. You can still complete the module.</p>';
+        document.getElementById('complete-btn').style.display = 'inline-block';
+    }
+}
+
+function displayLessonQuiz(questions) {
+    const container = document.getElementById('quiz-questions');
+
+    container.innerHTML = questions.map((q, index) => `
+        <div class="question-card" data-question="${index}">
+            <div class="question-text">Question ${index + 1}: ${q.question}</div>
+            <div class="question-options">
+                ${q.options.map(opt => `
+                    <button
+                        class="option-btn"
+                        data-option="${opt.letter}"
+                        onclick="checkLessonAnswer(${index}, '${opt.letter}', '${q.correct}')"
+                    >
+                        ${opt.letter}) ${opt.text}
+                    </button>
+                `).join('')}
+            </div>
+            <div class="answer-explanation" id="quiz-explanation-${index}" style="display: none;">
+                <strong>Explanation:</strong>
+                ${q.explanation}
+            </div>
         </div>
     `).join('');
 }
 
-function openModule(id) {
-    alert(`Module ${id} content coming soon! For now, try the AI Tutor to learn about this topic.`);
+function checkLessonAnswer(questionIndex, selected, correct) {
+    const card = document.querySelector(`#lesson-quiz [data-question="${questionIndex}"]`);
+    const buttons = card.querySelectorAll('.option-btn');
+    const explanation = document.getElementById(`quiz-explanation-${questionIndex}`);
+
+    // Disable all buttons
+    buttons.forEach(btn => {
+        btn.disabled = true;
+        const letter = btn.dataset.option;
+
+        if (letter === correct) {
+            btn.classList.add('correct');
+        } else if (letter === selected && selected !== correct) {
+            btn.classList.add('incorrect');
+        }
+    });
+
+    // Show explanation
+    explanation.style.display = 'block';
+
+    // Update score
+    if (selected === correct) {
+        appState.user.score += 10;
+        updateDashboard();
+    }
+
+    // Check if all questions answered
+    const allQuestions = document.querySelectorAll('#lesson-quiz .question-card');
+    const allAnswered = Array.from(allQuestions).every(q =>
+        q.querySelector('.option-btn[disabled]')
+    );
+
+    if (allAnswered) {
+        document.getElementById('complete-btn').style.display = 'inline-block';
+    }
+}
+
+function completeModule() {
+    if (!currentModuleId) return;
+
+    // Mark module as completed
+    if (!appState.user.completedModules.includes(currentModuleId)) {
+        appState.user.completedModules.push(currentModuleId);
+        appState.user.score += 50; // Bonus for completing module
+        updateDashboard();
+    }
+
+    // Show success message
+    alert(`🎉 Congratulations! You've completed this module and earned 50 bonus points!`);
+
+    // Return to modules view
+    closeModule();
+}
+
+function closeModule() {
+    currentModuleId = null;
+    switchView('modules');
+    renderModules(); // Re-render to show completion status
 }
 
 // ============================================
