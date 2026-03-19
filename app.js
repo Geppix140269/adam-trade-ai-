@@ -305,32 +305,63 @@ Format the response in clear sections with headers. Use bullet points for lists.
 function displayLesson(content) {
     const contentEl = document.getElementById('lesson-content');
 
-    // Parse and format the lesson content
-    let formattedContent = content
-        // Convert markdown-style headers to HTML
-        .replace(/\*\*([^*]+)\*\*/g, '<h3>$1</h3>')
-        // Convert bold text
-        .replace(/\*([^*]+)\*/g, '<strong>$1</strong>')
-        // Convert line breaks to paragraphs
-        .split('\n\n')
-        .map(para => {
-            para = para.trim();
-            if (!para) return '';
-            if (para.startsWith('<h3>')) return para;
-            if (para.includes('•') || para.includes('-')) {
-                // Convert to list
-                const items = para.split('\n').filter(line => line.trim());
-                const listItems = items.map(item => {
-                    const cleaned = item.replace(/^[•\-]\s*/, '').trim();
-                    return cleaned ? `<li>${cleaned}</li>` : '';
-                }).filter(item => item).join('');
-                return listItems ? `<ul>${listItems}</ul>` : '';
-            }
-            return `<p>${para}</p>`;
-        })
-        .join('');
+    // Clean up and parse the lesson content
+    let formatted = content
+        // Remove standalone colons on their own line
+        .replace(/:\s*\n/g, ':\n')
+        // Convert ### headers to h3
+        .replace(/###\s+(.+)/g, '<h3>$1</h3>')
+        // Convert **text** to h3 if not already converted
+        .replace(/\*\*([^*]+)\*\*:/g, '<h3>$1</h3>')
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+        // Remove asterisks used as bullets (but keep the text)
+        .replace(/^\*\s+/gm, '• ')
+        // Clean up numbered lists - remove leading asterisks from numbered items
+        .replace(/^\*\s+(\d+\.)/gm, '$1');
 
-    contentEl.innerHTML = formattedContent || '<p>' + content.replace(/\n/g, '</p><p>') + '</p>';
+    // Split into blocks
+    const blocks = formatted.split('\n\n').filter(b => b.trim());
+
+    let html = '';
+
+    for (let block of blocks) {
+        block = block.trim();
+        if (!block) continue;
+
+        // Already an h3
+        if (block.startsWith('<h3>')) {
+            html += block;
+            continue;
+        }
+
+        // Check if it's a list (numbered or bulleted)
+        const lines = block.split('\n').map(l => l.trim()).filter(l => l);
+        const isNumberedList = lines.some(l => /^\d+\.\s/.test(l));
+        const isBulletList = lines.some(l => /^[•\-]\s/.test(l));
+
+        if (isNumberedList) {
+            // Numbered list
+            const items = lines.map(line => {
+                const match = line.match(/^\d+\.\s+(.+)/);
+                if (match) return `<li>${match[1]}</li>`;
+                // If line doesn't start with number, it's a continuation
+                return line.startsWith('<h3>') ? '' : line;
+            }).filter(l => l && !l.startsWith('<h3>'));
+            html += `<ol>${items.join('')}</ol>`;
+        } else if (isBulletList) {
+            // Bullet list
+            const items = lines.map(line => {
+                const cleaned = line.replace(/^[•\-*]\s+/, '');
+                return cleaned ? `<li>${cleaned}</li>` : '';
+            }).filter(l => l);
+            html += `<ul>${items.join('')}</ul>`;
+        } else {
+            // Regular paragraph
+            html += `<p>${block}</p>`;
+        }
+    }
+
+    contentEl.innerHTML = html;
 }
 
 async function generateLessonQuiz(module) {
