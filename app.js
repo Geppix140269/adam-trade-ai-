@@ -369,10 +369,15 @@ async function generateLessonQuiz(module) {
     const questionsEl = document.getElementById('quiz-questions');
 
     quizEl.style.display = 'block';
-    questionsEl.innerHTML = '<div class="lesson-loading">Generating quiz questions...</div>';
+    questionsEl.innerHTML = '<div class="lesson-loading">Generating 10 quiz questions...</div>';
 
     try {
-        const prompt = `Generate 3 multiple choice questions about "${module.title}" to test understanding of the lesson content.
+        const prompt = `Generate 10 multiple choice questions about "${module.title}" to test understanding of the lesson content.
+
+Create questions of varying difficulty:
+- 4 beginner questions (basic concepts)
+- 4 intermediate questions (application)
+- 2 advanced questions (analysis/synthesis)
 
 For each question, provide:
 1. The question text
@@ -390,13 +395,13 @@ CORRECT: [A/B/C/D]
 EXPLANATION: [explanation]
 
 ---
-(repeat for each question, separated by ---)`;
+(repeat for all 10 questions, separated by ---)`;
 
         const response = await generateText(prompt);
         const questions = parseQuestions(response);
 
         if (questions.length > 0) {
-            displayLessonQuiz(questions);
+            displayLessonQuiz(questions, module);
         } else {
             questionsEl.innerHTML = '<p style="color: var(--muted);">Could not generate quiz. You can still complete the module.</p>';
             document.getElementById('complete-btn').style.display = 'inline-block';
@@ -407,12 +412,17 @@ EXPLANATION: [explanation]
     }
 }
 
-function displayLessonQuiz(questions) {
+function displayLessonQuiz(questions, module) {
     const container = document.getElementById('quiz-questions');
 
     container.innerHTML = questions.map((q, index) => `
         <div class="question-card" data-question="${index}">
-            <div class="question-text">Question ${index + 1}: ${q.question}</div>
+            <div class="question-header">
+                <div class="question-text">Question ${index + 1}: ${q.question}</div>
+                <button class="btn-tutor-help" onclick="askTutorAboutQuestion('${module.title.replace(/'/g, "\\'")}', '${q.question.replace(/'/g, "\\'")}', ${index})" title="Get help from AI Tutor">
+                    🤖 Ask AI Tutor
+                </button>
+            </div>
             <div class="question-options">
                 ${q.options.map(opt => `
                     <button
@@ -430,6 +440,26 @@ function displayLessonQuiz(questions) {
             </div>
         </div>
     `).join('');
+}
+
+function askTutorAboutQuestion(moduleTitle, question, questionIndex) {
+    // Switch to AI Tutor view
+    switchView('ai-tutor');
+
+    // Create a helpful pre-populated message
+    const helpMessage = `I'm working on the "${moduleTitle}" module and I have a question about quiz question ${questionIndex + 1}:\n\n"${question}"\n\nCan you help me understand this concept better?`;
+
+    // Add user message to chat
+    addChatMessage('user', helpMessage);
+    chatHistory.push({ role: 'user', content: helpMessage });
+
+    // Get AI response
+    chatWithAI(chatHistory).then(aiResponse => {
+        addChatMessage('ai', aiResponse);
+        chatHistory.push({ role: 'assistant', content: aiResponse });
+    }).catch(error => {
+        addChatMessage('ai', 'Sorry, I encountered an error. Please make sure the AI service is running.');
+    });
 }
 
 function checkLessonAnswer(questionIndex, selected, correct) {
